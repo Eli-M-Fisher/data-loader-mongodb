@@ -5,10 +5,14 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN rm -rf /app/services
+
+
 COPY ./services /app/services
 
 ENV PYTHONPATH=/app
 
 EXPOSE 8000
+
 
 CMD ["uvicorn", "services.data_loader.main:app", "--host", "0.0.0.0", "--port", "8000"]

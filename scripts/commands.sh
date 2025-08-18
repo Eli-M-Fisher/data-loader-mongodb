@@ -34,6 +34,9 @@ oc apply -f infrastructure/k8s/mongo-deployment.yaml
 
 oc get pods
 
+oc apply -f infrastructure/k8s/backend-deployment.yaml
+
+oc get pods
 
 
 
