@@ -24,8 +24,8 @@ spec:
         app: mongodb
     spec:
       containers:
-      - name: data-loader
-        image: docker.io/elif2/data-loader-app:mongo
+      - name: mongodb
+        image: mongo:6.0  
         ports:
         - containerPort: 27017
         volumeMounts:
