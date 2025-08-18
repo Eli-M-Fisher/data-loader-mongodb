@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-loader
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-loader
+  template:
+    metadata:
+      labels:
+        app: data-loader
+    spec:
+      containers:
+      - name: data-loader
+        image: elif2/data-loader-app:fixed
+        ports:
+        - containerPort: 8000
+        env:
+        - name: MYSQL_HOST
+          value: "mysql"
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_DATABASE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-loader-service
+spec:
+  ports:
+  - port: 8000
+  selector:
+    app: data-loader
