@@ -1,18 +1,20 @@
 from fastapi import FastAPI
-from services.data_loader.db import DataLoader
 import os
+from services.data_loader.db import DataLoader
 
+# Create the fastapi application
 app = FastAPI()
-# Initialize DataLoader with environment variables
+
+# initialize datloader with environment variables
+# Default values: host=localhost, port=27017, database=mydb
 loader = DataLoader(
-    host=os.environ.get("MYSQL_HOST", "localhost"),
-    user=os.environ.get("MYSQL_USER", "user"),
-    password=os.environ.get("MYSQL_PASSWORD", "password"),
-    database=os.environ.get("MYSQL_DATABASE", "mydb")
+    host=os.environ.get("MONGO_HOST", "localhost"),
+    port=int(os.environ.get("MONGO_PORT", "27017")),
+    database=os.environ.get("MONGO_DATABASE", "mydb")
 )
 
-# Define a route to get all data
+# define a route to get all data
 @app.get("/data")
 def read_data():
-# This function retrieves all data from the database
+    # this functon retrieves all data from the mongodbb collection
     return loader.get_all_data()
