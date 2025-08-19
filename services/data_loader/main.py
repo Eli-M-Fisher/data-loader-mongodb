@@ -1,20 +1,32 @@
 from fastapi import FastAPI
 import os
-from services.data_loader.db import DataLoader
+from .dal import SoldierDAL
+from .models import Soldier
 
-# Create the fastapi application
-app = FastAPI()
+# creat the fastapi application
+app = FastAPI(title="Enemy Soldiers CRUD API")
 
-# initialize datloader with environment variables
-# Default values: host=localhost, port=27017, database=mydb
-loader = DataLoader(
+# initialize dal with environmnt varibles
+dal = SoldierDAL(
     host=os.environ.get("MONGO_HOST", "localhost"),
     port=int(os.environ.get("MONGO_PORT", "27017")),
-    database=os.environ.get("MONGO_DATABASE", "mydb")
+    db_name=os.environ.get("MONGO_DATABASE", "enemy_soldiers"),
+    collection_name=os.environ.get("MONGO_COLLECTION", "soldier_details")
 )
 
-# define a route to get all data
-@app.get("/data")
-def read_data():
-    # this functon retrieves all data from the mongodbb collection
-    return loader.get_all_data()
+# route
+@app.get("/soldiersdb/")
+def read_soldiers():
+    return dal.get_all_soldiers()
+
+@app.post("/soldiersdb/")
+def create_soldier(soldier: Soldier):
+    return dal.add_soldier(soldier)
+
+@app.put("/soldiersdb/{ID}")
+def update_soldier(ID: int, field: str, value: str):
+    return dal.update_soldier(ID, field, value)
+
+@app.delete("/soldiersdb/{ID}")
+def delete_soldier(ID: int):
+    return dal.delete_soldier(ID)
