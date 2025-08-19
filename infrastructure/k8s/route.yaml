@@ -1,11 +1,11 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: data-loader-route
+  name: enemy-soldiers-route
 spec:
   to:
     kind: Service
-    name: data-loader-service
+    name: enemy-soldiers-service
   port:
     targetPort: 8000
   tls:
