@@ -1,24 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: data-loader
+  name: enemy-soldiers-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: data-loader
+      app: enemy-soldiers-api
   template:
     metadata:
       labels:
-        app: data-loader
+        app: enemy-soldiers-api
     spec:
-      initContainers:
-      - name: wait-for-mongo
-        image: busybox
-        command: ['sh', '-c', 'until nc -z mongodb 27017; do echo waiting for mongo; sleep 2; done;']
       containers:
-      - name: data-loader
-        image: elif2/data-loader-app:mongo
+      - name: enemy-soldiers-api
+        image: elif2/enemy-soldiers-api:latest
         ports:
         - containerPort: 8000
         env:
@@ -27,15 +23,17 @@ spec:
         - name: MONGO_PORT
           value: "27017"
         - name: MONGO_DATABASE
-          value: "mydb"
+          value: "enemy_soldiers"
+        - name: MONGO_COLLECTION
+          value: "soldier_details"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: data-loader-service
+  name: enemy-soldiers-service
 spec:
   selector:
-    app: data-loader
+    app: enemy-soldiers-api
   ports:
   - port: 8000
     targetPort: 8000
